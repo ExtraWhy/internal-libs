@@ -35,8 +35,8 @@ func (app *RequestService) LoadConfig(fname string) error {
 
 type LoginService struct {
 	ClientID     string `yaml:"client_id"`
-	ClientSec    string `yaml:"client_sec"`
-	RedirectUrl  string `yaml:"redir_url"`
+	ClientSecret string `yaml:"client_secret"`
+	RedirectUrl  string `yaml:"redirect_url"`
 	AllowedHosts string `yaml:"allowed_hosts"` //todo check for yaml arrays
 }
 
