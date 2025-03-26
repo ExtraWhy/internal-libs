@@ -56,10 +56,3 @@ func (app *LoginService) LoadConfig(fname string) error {
 	return nil
 
 }
-
-/*
-GOOGLE_CLIENT_ID=173962797108-p2fkcc16vpereds09mcflf79k7j1qtef.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=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
-GOOGLE_REDIRECT_URL=http://localhost:8080/auth/google/callback
-ALLOWED_HOSTS=http://localhost:3000, https://cryptowin-ten.vercel.app
-*/
