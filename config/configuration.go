@@ -34,10 +34,10 @@ func (app *RequestService) LoadConfig(fname string) error {
 }
 
 type LoginService struct {
-	GoogleClientID     string `yaml:"GOOGLE_CLIENT_ID"`
-	GoogleClientSecret string `yaml:"GOOGLE_CLIENT_SECRET"`
-	GoogleRedirectUrl  string `yaml:"GOOGLE_REDIRECT_URL"`
-	AllowedHosts       string `yaml:"ALLOWED_HOSTS"` //todo check for yaml arrays
+	GoogleClientID     string `yaml:"google_cli_id"`
+	GoogleClientSecret string `yaml:"google_cli_secret"`
+	GoogleRedirectUrl  string `yaml:"google_redir_url"`
+	AllowedHosts       string `yaml:"allowed_hosts"` //todo check for yaml arrays
 }
 
 func (app *LoginService) LoadConfig(fname string) error {
