@@ -1,4 +1,4 @@
-module casino/internallibs
+module github.com/ExtraWhy/internal-libs
 
 go 1.24.1
 
