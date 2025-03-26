@@ -34,9 +34,9 @@ func (app *RequestService) LoadConfig(fname string) error {
 }
 
 type LoginService struct {
-	GoogleClientID     string `yaml:"google_cli_id"`
-	GoogleClientSecret string `yaml:"google_cli_secret"`
-	GoogleRedirectUrl  string `yaml:"google_redir_url"`
+	GoogleClientID     string `yaml:"client_id"`
+	GoogleClientSecret string `yaml:"client_secret"`
+	GoogleRedirectUrl  string `yaml:"redir_url"`
 	AllowedHosts       string `yaml:"allowed_hosts"` //todo check for yaml arrays
 }
 
