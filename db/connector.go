@@ -15,16 +15,16 @@ type DBconnection struct {
 	db *sql.DB // priv connection
 }
 
-func (db *DBconnection) Init() bool {
-	os.Remove("casino.db")
+func (db *DBconnection) Init(dbname string) bool {
+	os.Remove(dbname)
 
-	file, err := os.Create("casino.db") // Create SQLite file todo - as argument
+	file, err := os.Create(dbname) // Create SQLite file todo - as argument
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 	file.Close()
 
-	db.db, _ = sql.Open("sqlite3", "casino.db") // Open the created SQLite File
+	db.db, _ = sql.Open("sqlite3", dbname) // Open the created SQLite File
 	createTable(db.db)
 
 	//todo checks
