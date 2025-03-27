@@ -28,6 +28,6 @@ func (zp *ZapperLog) Deinit() {
 	zp.logger.Sync()
 }
 
-func (zp *ZapperLog) GetLog() *ZapperLog {
-	return zp //just use zapper log featurse
+func (zp *ZapperLog) GetLog() *zap.Logger {
+	return zp.logger //just use zapper log featurse
 }
