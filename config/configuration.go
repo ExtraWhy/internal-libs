@@ -39,7 +39,7 @@ type OAuthProviderConfig struct {
 	RedirectUrl  string `yaml:"redirect_url"`
 }
 
-type UserService struct {
+type UserServiceasdifjasodifj struct {
 	AllowedHosts     string              `yaml:"allowed_hosts"` //todo check for yaml arrays
 	GoogleProvider   OAuthProviderConfig `yaml:"google_provider"`
 	FacebookProvider OAuthProviderConfig `yaml:"facebook_provider"`
