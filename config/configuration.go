@@ -34,13 +34,14 @@ func (app *RequestService) LoadConfig(fname string) error {
 }
 
 type OAuthProviderConfig struct {
-	ClientID     string `yaml:"client_id"`
-	ClientSecret string `yaml:"client_secret"`
-	RedirectUrl  string `yaml:"redirect_url"`
+	ClientID     string   `yaml:"client_id"`
+	ClientSecret string   `yaml:"client_secret"`
+	RedirectUrl  string   `yaml:"redirect_url"`
+	Scopes       []string `yaml:"scopes"`
 }
 
 type UserService struct {
-	AllowedHosts     string              `yaml:"allowed_hosts"` //todo check for yaml arrays
+	AllowedHosts     []string            `yaml:"allowed_hosts"`
 	GoogleProvider   OAuthProviderConfig `yaml:"google_provider"`
 	FacebookProvider OAuthProviderConfig `yaml:"facebook_provider"`
 }
