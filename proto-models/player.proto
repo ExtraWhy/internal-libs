@@ -1,9 +1,13 @@
-message Player {
-  required string name = 1;
-  required uint64 money = 2;  // Unique ID number for this person.
-  required uint64 id = 3;  // Unique ID number for this person.
+syntax = "proto2";
 
-//  optional google.protobuf.Timestamp last_updated = 5;
+
+
+message Player {
+   required string name = 1;
+   required uint64 money = 2;  // Unique ID number for this person.
+   required uint64 id = 3;  // Unique ID number for this person.
+
+
 }
 
 
@@ -13,9 +17,9 @@ service Greeter {
 }
 // Our address book file is just one of these.
 message PlayerRequest {
-   required string name = 1;
+    required string name = 1;
 }
 
 message PlayerResponse {
-   required string name = 1;
+    required string name = 1;
 }
