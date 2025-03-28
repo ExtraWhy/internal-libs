@@ -1,0 +1,21 @@
+message Player {
+  required string name = 1;
+  required uint64 money = 2;  // Unique ID number for this person.
+  required uint64 id = 3;  // Unique ID number for this person.
+
+//  optional google.protobuf.Timestamp last_updated = 5;
+}
+
+
+service Greeter {
+  // Sends a greeting
+  rpc SayHello (PlayerRequest) returns (PlayerResponse) {}
+}
+// Our address book file is just one of these.
+message PlayerRequest {
+   required string name = 1;
+}
+
+message PlayerResponse {
+   required string name = 1;
+}
