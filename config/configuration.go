@@ -33,14 +33,21 @@ func (app *RequestService) LoadConfig(fname string) error {
 
 }
 
-type LoginService struct {
-	ClientID     string `yaml:"client_id"`
-	ClientSecret string `yaml:"client_secret"`
-	RedirectUrl  string `yaml:"redirect_url"`
-	AllowedHosts string `yaml:"allowed_hosts"` //todo check for yaml arrays
+type OAuthProviderConfig struct {
+	ClientID     string   `yaml:"client_id"`
+	ClientSecret string   `yaml:"client_secret"`
+	UserInfoUrl  string   `yaml:"user_info_url"`
+	RedirectUrl  string   `yaml:"redirect_url"`
+	Scopes       []string `yaml:"scopes"`
 }
 
-func (app *LoginService) LoadConfig(fname string) error {
+type UserService struct {
+	AllowedHosts     []string            `yaml:"allowed_hosts"`
+	GoogleProvider   OAuthProviderConfig `yaml:"google_provider"`
+	FacebookProvider OAuthProviderConfig `yaml:"facebook_provider"`
+}
+
+func (app *UserService) LoadConfig(fname string) error {
 	var fp *os.File
 	var err error
 	if fp, err = os.Open(fname); err != nil {
