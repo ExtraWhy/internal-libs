@@ -36,6 +36,7 @@ func (app *RequestService) LoadConfig(fname string) error {
 type OAuthProviderConfig struct {
 	ClientID     string   `yaml:"client_id"`
 	ClientSecret string   `yaml:"client_secret"`
+	UserInfoUrl  string   `yaml:"user_info_url"`
 	RedirectUrl  string   `yaml:"redirect_url"`
 	Scopes       []string `yaml:"scopes"`
 }
