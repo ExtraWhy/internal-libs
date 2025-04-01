@@ -9,9 +9,11 @@ import (
 
 func CreateUsersTable(db *sql.DB) error {
 	const tableSQL = `CREATE TABLE users(
-  id INTEGER PRIMARY KEY,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT,
   email TEXT
+  token TEXT
+  picture TEXT
 );`
 
 	statement, err := db.Prepare(tableSQL)
@@ -37,14 +39,14 @@ func (dbc *DBConnection) InsertUser(u user.User) error {
 	}
 
 	//If it's a new user proceed to create it
-	query := `INSERT INTO users(id, username, email) VALUES (?, ?, ?)`
+	query := `INSERT INTO users(username, email, token, picture) VALUES (?, ?, ?, ?)`
 	stmt, err := dbc.db.Prepare(query)
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
 
-	result, err := stmt.Exec(u.Id, u.Username, u.Email)
+	result, err := stmt.Exec(u.Username, u.Email, u.Token, u.Picture)
 	rowsAffected, err := result.RowsAffected()
 	lastInsertID, err := result.LastInsertId()
 
@@ -56,7 +58,7 @@ func (dbc *DBConnection) InsertUser(u user.User) error {
 }
 
 func (dbc *DBConnection) GetUsers() ([]user.User, error) {
-	rows, err := dbc.db.Query("SELECT id, username, email FROM users")
+	rows, err := dbc.db.Query("SELECT * FROM users")
 	if err != nil {
 		return nil, err
 	}
