@@ -11,8 +11,8 @@ func CreateUsersTable(db *sql.DB) error {
 	const tableSQL = `CREATE TABLE users(
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT,
-  email TEXT
-  token TEXT
+  email TEXT,
+  token TEXT,
   picture TEXT
 );`
 
