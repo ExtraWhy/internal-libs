@@ -1,7 +1,7 @@
 package user
 
 type User struct {
-	Id       uint64 `json:"id"`
+	Id       string `json:"id"`
 	Token    string `json:"token"`
 	Username string `json:"username"`
 	Email    string `json:"email"`

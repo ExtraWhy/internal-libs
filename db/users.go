@@ -5,11 +5,12 @@ import (
 	"fmt"
 
 	"github.com/ExtraWhy/internal-libs/models/user"
+	"github.com/google/uuid"
 )
 
 func CreateUsersTable(db *sql.DB) error {
 	const tableSQL = `CREATE TABLE users(
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id TEXT PRIMARY KEY,
   username TEXT,
   email TEXT,
   token TEXT,
@@ -29,31 +30,26 @@ func CreateUsersTable(db *sql.DB) error {
 func (dbc *DBConnection) InsertUser(u user.User) error {
 	// Insert only if new user
 	var count int
-	fmt.Printf("dbc db value for insert user is: %v\n", dbc.db)
-	err := dbc.db.QueryRow("SELECT COUNT(*) FROM users WHERE id = ?", u.Id).Scan(&count)
+	err := dbc.db.QueryRow("SELECT COUNT(*) FROM users WHERE email = ?", u.Email).Scan(&count)
 	if err != nil {
 		return err
 	}
 	if count > 0 {
-		return fmt.Errorf("user with id %d already exists", u.Id)
+		return fmt.Errorf("user with email %s already exists", u.Email)
 	}
 
+	u.Id = uuid.New().String()
+
 	//If it's a new user proceed to create it
-	query := `INSERT INTO users(username, email, token, picture) VALUES (?, ?, ?, ?)`
+	query := `INSERT INTO users(id, username, email, token, picture) VALUES (?, ?, ?, ?)`
 	stmt, err := dbc.db.Prepare(query)
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
 
-	result, err := stmt.Exec(u.Username, u.Email, u.Token, u.Picture)
-	rowsAffected, err := result.RowsAffected()
-	lastInsertID, err := result.LastInsertId()
+	_, err = stmt.Exec(u.Id, u.Username, u.Email, u.Token, u.Picture)
 
-	fmt.Println("resultt from insert", rowsAffected, lastInsertID)
-
-	users, _ := dbc.GetUsers()
-	fmt.Println("result from get users", users)
 	return err
 }
 

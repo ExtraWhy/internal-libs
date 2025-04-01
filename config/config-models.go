@@ -21,5 +21,6 @@ type UserService struct {
 	AllowedHosts     []string            `yaml:"allowed_hosts"`
 	GoogleProvider   OAuthProviderConfig `yaml:"google_provider"`
 	FacebookProvider OAuthProviderConfig `yaml:"facebook_provider"`
+	DBDriver         string              `yaml:"db_driver"`
 	DBName           string              `yaml:"db_name"`
 }
