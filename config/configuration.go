@@ -10,9 +10,9 @@ import (
 // todo for more xomplex configs
 // ConfigFile map[string]*AppConfig
 type MegaConfig struct {
-	Reqquest *RequestService
-	Oauth    *OAuthProviderConfig
-	User     *UserService
+	Requests RequestService
+	Oauth    OAuthProviderConfig
+	User     UserService
 }
 
 func (app *MegaConfig) LoadConfig(fname string) error {
