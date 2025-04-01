@@ -45,6 +45,7 @@ type UserService struct {
 	AllowedHosts     []string            `yaml:"allowed_hosts"`
 	GoogleProvider   OAuthProviderConfig `yaml:"google_provider"`
 	FacebookProvider OAuthProviderConfig `yaml:"facebook_provider"`
+	DBName           string              `yaml:"db_name"`
 }
 
 func (app *UserService) LoadConfig(fname string) error {
