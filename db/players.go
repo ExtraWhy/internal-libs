@@ -1,21 +1,20 @@
 package db
 
 import (
-	"database/sql"
 	"log"
 
 	"github.com/ExtraWhy/internal-libs/models/player"
 	_ "github.com/mattn/go-sqlite3" // Import go-sqlite3 library
 )
 
-func CreatePlayersTable(db *sql.DB) {
+func (db *DBConnection) CreatePlayersTable() {
 	playerstable := `CREATE TABLE players (
 		"id" integer ,		
 		"money" integer,
 		"name" TEXT		
 	  );` // SQL Statement for Create Table
 
-	statement, err := db.Prepare(playerstable) // Prepare SQL Statement
+	statement, err := db.db.Prepare(playerstable) // Prepare SQL Statement
 	if err != nil {
 		log.Fatal(err.Error())
 	}
