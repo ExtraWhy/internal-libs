@@ -41,7 +41,7 @@ func (dbc *DBConnection) InsertUser(u user.User) error {
 	u.Id = uuid.New().String()
 
 	//If it's a new user proceed to create it
-	query := `INSERT INTO users(id, username, email, token, picture) VALUES (?, ?, ?, ?)`
+	query := `INSERT INTO users(id, username, email, token, picture) VALUES (?, ?, ?, ?, ?)`
 	stmt, err := dbc.db.Prepare(query)
 	if err != nil {
 		return err
