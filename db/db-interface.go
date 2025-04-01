@@ -15,7 +15,7 @@ type DBConnection struct {
 	db *sql.DB // priv connection
 }
 
-func (dbc *DBConnection) Init(dbname string, initializers []TableInitializer) error {
+func (dbc *DBConnection) Init(dbname string, initializers ...TableInitializer) error {
 	os.Remove(dbname)
 
 	file, err := os.Create(dbname) // Create SQLite file todo - as argument
