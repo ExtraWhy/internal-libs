@@ -27,6 +27,7 @@ func CreateUsersTable(db *sql.DB) error {
 func (dbc *DBConnection) InsertUser(u user.User) error {
 	// Insert only if new user
 	var count int
+	fmt.Printf("dbc db value for insert user is: %v\n", dbc.db)
 	err := dbc.db.QueryRow("SELECT COUNT(*) FROM users WHERE id = ?", u.Id).Scan(&count)
 	if err != nil {
 		return err
