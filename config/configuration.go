@@ -10,9 +10,9 @@ import (
 // todo for more xomplex configs
 // ConfigFile map[string]*AppConfig
 type MegaConfig struct {
-	Requests *RequestService
-	Oauth    *OAuthProviderConfig
-	User     *UserService
+	Requests RequestService
+	Oauth    OAuthProviderConfig
+	User     UserService
 }
 
 func (app *MegaConfig) LoadConfig(fname string) error {
@@ -24,13 +24,13 @@ func (app *MegaConfig) LoadConfig(fname string) error {
 	defer fp.Close()
 
 	decoder := yaml.NewDecoder(fp)
-	if err := decoder.Decode(app.Requests); err != nil {
+	if err := decoder.Decode(&app.Requests); err != nil {
 		//		return fmt.Errorf("falied to decode : %s", fname)
 	}
-	if err := decoder.Decode(app.Oauth); err != nil {
+	if err := decoder.Decode(&app.Oauth); err != nil {
 		//		return fmt.Errorf("falied to decode : %s", fname)
 	}
-	if err := decoder.Decode(app.User); err != nil {
+	if err := decoder.Decode(&app.User); err != nil {
 		//		return fmt.Errorf("falied to decode : %s", fname)
 	}
 	return nil
