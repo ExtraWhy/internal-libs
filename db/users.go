@@ -67,7 +67,7 @@ func (dbc *DBConnection) GetUsers() ([]user.User, error) {
 	var users []user.User
 	for rows.Next() {
 		var u user.User
-		if err := rows.Scan(&u.Id, &u.Username, &u.Email); err != nil {
+		if err := rows.Scan(&u.Id, &u.Username, &u.Email, &u.Token, &u.Picture); err != nil {
 			return nil, err
 		}
 		users = append(users, u)
