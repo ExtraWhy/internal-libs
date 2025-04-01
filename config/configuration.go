@@ -22,14 +22,15 @@ type MegaConfig struct {
 	User     UserService
 }
 
-func (app *MegaConfig) LoadConfig(fname string) error, int {
+func (app *MegaConfig) LoadConfig(fname string) (int, error) {
 	var fp *os.File
 	var err error
+	var errcode = 0
+
 	if fp, err = os.Open(fname); err != nil {
-		return fmt.Errorf("falied to open : %s", fname)
+		return errcode, fmt.Errorf("falied to open : %s", fname)
 	}
 	defer fp.Close()
-	var errcode = 0
 	decoder := yaml.NewDecoder(fp)
 	if err := decoder.Decode(&app.Requests); err != nil {
 		errcode |= ERROR_REQUEST_CONF
@@ -41,7 +42,7 @@ func (app *MegaConfig) LoadConfig(fname string) error, int {
 		errcode |= ERROR_USER_CONF
 	}
 	if errcode == MAX_ERRORS {
-		return fmt.Errorf("falied to decode : %s error %d", fname, errcode)
+		return errcode, fmt.Errorf("falied to decode : %s error %d", fname, errcode)
 	}
-	return nil, errcode
+	return errcode, nil
 }
