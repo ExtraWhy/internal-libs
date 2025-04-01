@@ -12,7 +12,7 @@ import (
 type MegaConfig struct {
 }
 
-func (app *MegaConfig) LoadConfig(fname string, cf any) error {
+func (app *MegaConfig) LoadConfig(fname string, cf interface{}) error {
 	var fp *os.File
 	var err error
 
@@ -21,7 +21,7 @@ func (app *MegaConfig) LoadConfig(fname string, cf any) error {
 	}
 	defer fp.Close()
 	decoder := yaml.NewDecoder(fp)
-	if err := decoder.Decode(&cf); err != nil {
+	if err := decoder.Decode(cf); err != nil {
 		return fmt.Errorf("falied to decode : %s ", fname)
 
 	}
