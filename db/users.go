@@ -44,7 +44,14 @@ func (dbc *DBConnection) InsertUser(u user.User) error {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(u.Id, u.Username, u.Email)
+	result, err := stmt.Exec(u.Id, u.Username, u.Email)
+	rowsAffected, err := result.RowsAffected()
+	lastInsertID, err := result.LastInsertId()
+
+	fmt.Println("resultt from insert", rowsAffected, lastInsertID)
+
+	users, _ := dbc.GetUsers()
+	fmt.Println("result from get users", users)
 	return err
 }
 
