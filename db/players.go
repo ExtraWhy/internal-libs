@@ -4,8 +4,16 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/ExtraWhy/internal-libs/models/player"
-	_ "github.com/mattn/go-sqlite3" // Import go-sqlite3 library
+	"ExtraWhy/internal-libs/models/player"
+	_ "github.com/mattn/query := `INSERT INTO users(id, username, email) VALUES (?, ?, ?)`
+	stmt, err := dbc.db.Prepare(query)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(u.Id, u.Username, u.Email)
+	return errgo-sqlite3" // Import go-sqlite3 library
 )
 
 func CreatePlayersTable(db *sql.DB) {

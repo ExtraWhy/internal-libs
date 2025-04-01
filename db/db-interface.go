@@ -5,9 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-
-	"github.com/ExtraWhy/internal-libs/player"
-	_ "github.com/mattn/go-sqlite3" // Import go-sqlite3 library
 )
 
 type TableInitializer func(db *sql.DB) error
