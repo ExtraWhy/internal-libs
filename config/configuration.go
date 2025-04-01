@@ -12,7 +12,7 @@ import (
 type MegaConfig struct {
 }
 
-func (app *MegaConfig) LoadConfig(fname string, cf interface{}) error {
+func (app *MegaConfig) LoadConfig(fname string, cf any) error {
 	var fp *os.File
 	var err error
 
