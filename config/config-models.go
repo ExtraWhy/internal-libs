@@ -16,6 +16,8 @@ type OAuthProviderConfig struct {
 }
 
 type UserService struct {
+	UserServiceHost  string              `yaml:"user_service_host"`
+	UserServicePort  string              `yaml:"user_service_port"`
 	AllowedHosts     []string            `yaml:"allowed_hosts"`
 	GoogleProvider   OAuthProviderConfig `yaml:"google_provider"`
 	FacebookProvider OAuthProviderConfig `yaml:"facebook_provider"`
