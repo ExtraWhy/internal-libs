@@ -5,7 +5,7 @@ package playerproto;
 
 message Player {
    optional string name = 1;
-   required uint64 id = 2;  // Unique ID number for this person.
+   optional uint64 id = 2;  // Unique ID number for this person.
    optional uint64 money = 3;  // Unique ID number for this person.
    optional uint64 gameid = 4; //game id to roll the random against 
 }
@@ -22,13 +22,13 @@ service ServiceGameWon {
 
 message PlayerRequest {
     optional  string name = 1;
-    required  uint64 id = 2; 
+    optional  uint64 id = 2; 
     optional  uint64 gameid = 3;
 }
 
 message PlayerResponse {
     optional string name = 1;
-    required uint64 id = 2;
+    optional uint64 id = 2;
     optional uint64 gameid = 3;
     optional uint64 money_won = 4; 
 }
