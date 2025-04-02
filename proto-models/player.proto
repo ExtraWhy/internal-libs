@@ -3,25 +3,32 @@ syntax = "proto2";
 package playerproto;
 
 
-
 message Player {
-   required string name = 1;
-   required uint64 money = 2;  // Unique ID number for this person.
-   required uint64 id = 3;  // Unique ID number for this person.
-
-
+   optional string name = 1;
+   optional uint64 id = 2;  // Unique ID number for this person.
+   optional uint64 money = 3;  // Unique ID number for this person.
+   optional uint64 gameid = 4; //game id to roll the random against 
 }
 
 
-service Greeter {
-  // Sends a greeting
-  rpc SayHello (PlayerRequest) returns (PlayerResponse) {}
+service ServiceGameWon {
+  
+  rpc GetWinForPlayer (PlayerRequest) returns (PlayerResponse) {}
 }
-// Our address book file is just one of these.
+
+//player requests 
+// shall take the win/lose situation here 
+// GET ip:port/players/id/play/id
+
 message PlayerRequest {
-    required string name = 1;
+    optional  string name = 1;
+    optional  uint64 id = 2; 
+    optional  uint64 gameid = 3;
 }
 
 message PlayerResponse {
-    required string name = 1;
+    optional string name = 1;
+    optional uint64 id = 2;
+    optional uint64 gameid = 3;
+    optional uint64 money_won = 4; 
 }
