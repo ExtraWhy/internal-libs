@@ -5,6 +5,7 @@ type RequestService struct {
 	DatabaseType    string `yaml:"database_type"`
 	RestServiceHost string `yaml:"rest_service_host"`
 	RestServicePort string `yaml:"rest_service_port"`
+	GameServicePort string `yaml:"game_serv_port"`
 }
 
 type OAuthProviderConfig struct {
