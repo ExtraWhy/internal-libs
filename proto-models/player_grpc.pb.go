@@ -14,88 +14,86 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// GreeterClient is the client API for Greeter service.
+// ServiceGameWonClient is the client API for ServiceGameWon service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type GreeterClient interface {
-	// Sends a greeting
-	SayHello(ctx context.Context, in *PlayerRequest, opts ...grpc.CallOption) (*PlayerResponse, error)
+type ServiceGameWonClient interface {
+	GetWinForPlayer(ctx context.Context, in *PlayerRequest, opts ...grpc.CallOption) (*PlayerResponse, error)
 }
 
-type greeterClient struct {
+type serviceGameWonClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewGreeterClient(cc grpc.ClientConnInterface) GreeterClient {
-	return &greeterClient{cc}
+func NewServiceGameWonClient(cc grpc.ClientConnInterface) ServiceGameWonClient {
+	return &serviceGameWonClient{cc}
 }
 
-func (c *greeterClient) SayHello(ctx context.Context, in *PlayerRequest, opts ...grpc.CallOption) (*PlayerResponse, error) {
+func (c *serviceGameWonClient) GetWinForPlayer(ctx context.Context, in *PlayerRequest, opts ...grpc.CallOption) (*PlayerResponse, error) {
 	out := new(PlayerResponse)
-	err := c.cc.Invoke(ctx, "/playerproto.Greeter/SayHello", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/playerproto.ServiceGameWon/GetWinForPlayer", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// GreeterServer is the server API for Greeter service.
-// All implementations must embed UnimplementedGreeterServer
+// ServiceGameWonServer is the server API for ServiceGameWon service.
+// All implementations must embed UnimplementedServiceGameWonServer
 // for forward compatibility
-type GreeterServer interface {
-	// Sends a greeting
-	SayHello(context.Context, *PlayerRequest) (*PlayerResponse, error)
-	mustEmbedUnimplementedGreeterServer()
+type ServiceGameWonServer interface {
+	GetWinForPlayer(context.Context, *PlayerRequest) (*PlayerResponse, error)
+	mustEmbedUnimplementedServiceGameWonServer()
 }
 
-// UnimplementedGreeterServer must be embedded to have forward compatible implementations.
-type UnimplementedGreeterServer struct {
+// UnimplementedServiceGameWonServer must be embedded to have forward compatible implementations.
+type UnimplementedServiceGameWonServer struct {
 }
 
-func (UnimplementedGreeterServer) SayHello(context.Context, *PlayerRequest) (*PlayerResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SayHello not implemented")
+func (UnimplementedServiceGameWonServer) GetWinForPlayer(context.Context, *PlayerRequest) (*PlayerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetWinForPlayer not implemented")
 }
-func (UnimplementedGreeterServer) mustEmbedUnimplementedGreeterServer() {}
+func (UnimplementedServiceGameWonServer) mustEmbedUnimplementedServiceGameWonServer() {}
 
-// UnsafeGreeterServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to GreeterServer will
+// UnsafeServiceGameWonServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ServiceGameWonServer will
 // result in compilation errors.
-type UnsafeGreeterServer interface {
-	mustEmbedUnimplementedGreeterServer()
+type UnsafeServiceGameWonServer interface {
+	mustEmbedUnimplementedServiceGameWonServer()
 }
 
-func RegisterGreeterServer(s grpc.ServiceRegistrar, srv GreeterServer) {
-	s.RegisterService(&Greeter_ServiceDesc, srv)
+func RegisterServiceGameWonServer(s grpc.ServiceRegistrar, srv ServiceGameWonServer) {
+	s.RegisterService(&ServiceGameWon_ServiceDesc, srv)
 }
 
-func _Greeter_SayHello_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ServiceGameWon_GetWinForPlayer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PlayerRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GreeterServer).SayHello(ctx, in)
+		return srv.(ServiceGameWonServer).GetWinForPlayer(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/playerproto.Greeter/SayHello",
+		FullMethod: "/playerproto.ServiceGameWon/GetWinForPlayer",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GreeterServer).SayHello(ctx, req.(*PlayerRequest))
+		return srv.(ServiceGameWonServer).GetWinForPlayer(ctx, req.(*PlayerRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Greeter_ServiceDesc is the grpc.ServiceDesc for Greeter service.
+// ServiceGameWon_ServiceDesc is the grpc.ServiceDesc for ServiceGameWon service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Greeter_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "playerproto.Greeter",
-	HandlerType: (*GreeterServer)(nil),
+var ServiceGameWon_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "playerproto.ServiceGameWon",
+	HandlerType: (*ServiceGameWonServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SayHello",
-			Handler:    _Greeter_SayHello_Handler,
+			MethodName: "GetWinForPlayer",
+			Handler:    _ServiceGameWon_GetWinForPlayer_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
