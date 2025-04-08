@@ -1,6 +1,7 @@
 package db
 
 import (
+	"errors"
 	"log"
 
 	"github.com/ExtraWhy/internal-libs/models/player"
@@ -52,4 +53,17 @@ func (db *DBConnection) AddPlayer(p *player.Player) bool {
 		return false
 	}
 	return true
+}
+
+func (db *DBConnection) UpdatePlayerMoney(p *player.Player) (int64, error) {
+
+	if p == nil {
+		return -1, errors.New("nil reference to player")
+	}
+	udquery := `UPDATE players SET money = ? WHERE id = ?;`
+	if result, err := db.db.Exec(udquery, p.Money, p.Id); err != nil {
+		return 0, err
+	} else {
+		return result.RowsAffected()
+	}
 }
