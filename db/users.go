@@ -27,7 +27,7 @@ func CreateUsersTable(db *sql.DB) error {
 	return err
 }
 
-func (dbc *DBConnection) InsertUser(u user.User) error {
+func (dbc *DBSqlConnection) InsertUser(u user.User) error {
 	// Insert only if new user
 	var count int
 	err := dbc.db.QueryRow("SELECT COUNT(*) FROM users WHERE email = ?", u.Email).Scan(&count)
@@ -53,7 +53,7 @@ func (dbc *DBConnection) InsertUser(u user.User) error {
 	return err
 }
 
-func (dbc *DBConnection) GetUsers() ([]user.User, error) {
+func (dbc *DBSqlConnection) GetUsers() ([]user.User, error) {
 	rows, err := dbc.db.Query("SELECT * FROM users")
 	if err != nil {
 		return nil, err
