@@ -1,62 +1,45 @@
 package db
 
 import (
-	"database/sql"
 	"fmt"
-	"os"
+
+	"github.com/ExtraWhy/internal-libs/models/player"
 )
 
-type TableInitializer func(db *sql.DB) error
-
-type DBConnection struct {
-	//more to be filled here and implement interfaces for other db
-
-	db *sql.DB // priv connection
+type DbIface interface {
+	Init(driver string, dsn string) error
+	Deinit() error
+	UpdatePlayerMoney(p *player.Player) (int64, error)
+	DisplayPlayers() []player.Player
+	AddPlayer(p *player.Player) bool
+	CreatePlayersTable() error
 }
 
-func (dbc *DBConnection) Init(driver string, dsn string) error {
-	if err := prepareDriver(driver, dsn); err != nil {
-		return err
-	}
+type UnimplementedDbConnector struct {
+}
 
-	db, err := sql.Open(driver, dsn)
-	if err != nil {
-		return fmt.Errorf("failed to open database: %w", err)
-	}
+func (UnimplementedDbConnector) mustEmbedUnimplementedDbConnector() {}
 
-	dbc.db = db
+func (UnimplementedDbConnector) CreatePlayersTable() error {
+	return fmt.Errorf("Must implement method Init")
+}
+
+func (UnimplementedDbConnector) AddPlayer(p *player.Player) bool {
+	return false
+}
+
+func (UnimplementedDbConnector) UpdatePlayerMoney(p *player.Player) (int64, error) {
+	return -1, fmt.Errorf("Must implement method Init")
+}
+
+func (UnimplementedDbConnector) DisplayPlayers() []player.Player {
 	return nil
 }
 
-func (db *DBConnection) Deinit() {
-	db.db.Close()
+func (UnimplementedDbConnector) Init(driver string, dsn string) error {
+	return fmt.Errorf("Must implement method Init")
 }
 
-func prepareDriver(driver, dsn string) error {
-	switch driver {
-	case "sqlite3":
-		_ = os.Remove(dsn)
-		file, err := os.Create(dsn)
-		if err != nil {
-			return fmt.Errorf("failed to create db file: %w", err)
-		}
-		return file.Close()
-
-	case "postgres", "mysql":
-		// TO DO if needed, but no file prepr is needed so maybe skip even
-
-	default:
-		return fmt.Errorf("unsupported driver: %s", driver)
-	}
-
-	return nil
-}
-
-func (dbc *DBConnection) SetupSchema(initializers ...TableInitializer) error {
-	for _, initializer := range initializers {
-		if err := initializer(dbc.db); err != nil {
-			return fmt.Errorf("Failed to create table: %w", err)
-		}
-	}
-	return nil
+func (UnimplementedDbConnector) Deinit() error {
+	return fmt.Errorf("Must implement method Deinit")
 }

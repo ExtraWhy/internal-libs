@@ -1,14 +1,16 @@
 package db
 
 import (
+	"context"
 	"errors"
 	"log"
 
 	"github.com/ExtraWhy/internal-libs/models/player"
 	_ "github.com/mattn/go-sqlite3" // Import go-sqlite3 library
+	"go.mongodb.org/mongo-driver/bson"
 )
 
-func (db *DBConnection) CreatePlayersTable() {
+func (db *DBSqlConnection) CreatePlayersTable() error {
 	playerstable := `CREATE TABLE players (
 		"id" integer ,		
 		"money" integer,
@@ -17,12 +19,13 @@ func (db *DBConnection) CreatePlayersTable() {
 
 	statement, err := db.db.Prepare(playerstable) // Prepare SQL Statement
 	if err != nil {
-		log.Fatal(err.Error())
+		return errors.New("failed to prepare players table")
 	}
-	statement.Exec() // Execute SQL Statements
+	statement.Exec() // Execute SQL Statements //check for error
+	return nil
 }
 
-func (db *DBConnection) DisplayPlayers() []player.Player {
+func (db *DBSqlConnection) DisplayPlayers() []player.Player {
 	row, err := db.db.Query("SELECT * FROM players")
 	if err != nil {
 		log.Fatal(err)
@@ -37,7 +40,12 @@ func (db *DBConnection) DisplayPlayers() []player.Player {
 	return list
 }
 
-func (db *DBConnection) AddPlayer(p *player.Player) bool {
+func (db *NoSqlConnection) CreatePlayersTable() error {
+
+	return nil
+}
+
+func (db *DBSqlConnection) AddPlayer(p *player.Player) bool {
 	if p == nil {
 		return false
 	}
@@ -55,7 +63,7 @@ func (db *DBConnection) AddPlayer(p *player.Player) bool {
 	return true
 }
 
-func (db *DBConnection) UpdatePlayerMoney(p *player.Player) (int64, error) {
+func (db *DBSqlConnection) UpdatePlayerMoney(p *player.Player) (int64, error) {
 
 	if p == nil {
 		return -1, errors.New("nil reference to player")
@@ -66,4 +74,41 @@ func (db *DBConnection) UpdatePlayerMoney(p *player.Player) (int64, error) {
 	} else {
 		return result.RowsAffected()
 	}
+}
+
+func (db *NoSqlConnection) AddPlayer(p *player.Player) bool {
+
+	coll := db.db.Collection("players")
+
+	result, err := coll.InsertOne(context.TODO(), p)
+	if err != nil {
+		return false
+	}
+	return result.Acknowledged
+}
+
+func (db *NoSqlConnection) DisplayPlayers() []player.Player {
+	col := db.db.Collection("players")
+	cursor, err := col.Find(context.TODO(), bson.M{})
+	if err != nil {
+		return nil
+	}
+	var players []player.Player
+	for cursor.Next(context.TODO()) {
+		var elem player.Player
+		err := cursor.Decode(&elem)
+		if err == nil {
+			players = append(players, elem)
+		}
+	}
+	return players
+}
+
+func (db *NoSqlConnection) UpdatePlayerMoney(p *player.Player) (int64, error) {
+	updt := bson.M{"$set": bson.M{"money": p.Money}}
+	res, err := db.db.Collection("players").UpdateOne(context.TODO(), bson.M{"id": p.Id}, updt)
+	if err != nil {
+		return -1, errors.New("failed to updated")
+	}
+	return res.ModifiedCount, nil
 }
