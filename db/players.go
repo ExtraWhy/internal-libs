@@ -93,7 +93,7 @@ func (db *NoSqlConnection) DisplayPlayers() []player.Player {
 	if err != nil {
 		return nil
 	}
-	var players = make([]player.Player, 100)
+	var players = make([]player.Player, 5)
 	for cursor.Next(context.TODO()) {
 		var elem player.Player
 		err := cursor.Decode(&elem)
