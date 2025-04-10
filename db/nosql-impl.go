@@ -29,13 +29,8 @@ func (dbc *NoSqlConnection) Init(driver string, dsn string) error {
 	// Create a new client and connect to the server
 	dbc.dbc, err = mongo.Connect(opts)
 	if err != nil {
-		panic(err)
+		return err
 	}
-
-	defer func() {
-		if err = dbc.dbc.Disconnect(context.TODO()); err != nil {
-		}
-	}()
 
 	// Send a ping to confirm a successful connection
 	if err := dbc.dbc.Ping(context.TODO(), readpref.Primary()); err != nil {
