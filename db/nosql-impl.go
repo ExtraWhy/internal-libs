@@ -48,7 +48,9 @@ func (dbc *NoSqlConnection) Init(driver string, dsn string) error {
 
 }
 
-func (dbc *NoSqlConnection) Deinit() {
+func (dbc *NoSqlConnection) Deinit() error {
 	if err := dbc.dbc.Disconnect(context.TODO()); err != nil {
+		return err
 	}
+	return nil
 }

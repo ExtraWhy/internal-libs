@@ -5,7 +5,6 @@ import "fmt"
 type DbIface interface {
 	Init(driver string, dsn string) error
 	Deinit() error
-	Connect() error
 }
 
 type UnimplementedDbConnector struct {

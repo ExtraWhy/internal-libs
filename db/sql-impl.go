@@ -27,8 +27,8 @@ func (dbc *DBSqlConnection) Init(driver string, dsn string) error {
 	return nil
 }
 
-func (db *DBSqlConnection) Deinit() {
-	db.db.Close()
+func (db *DBSqlConnection) Deinit() error {
+	return db.db.Close()
 }
 
 func prepareDriver(driver, dsn string) error {
