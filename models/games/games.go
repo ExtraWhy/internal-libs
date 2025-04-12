@@ -1,13 +1,14 @@
 package games
 
 type Win struct {
-	Top      byte
-	Mid      byte
-	Bottom   byte
-	DLow     byte
-	DHigh    byte
-	ZigRight byte
-	ZizLeft  byte
+	Top         byte
+	Mid         byte
+	Bottom      byte
+	DLow        byte
+	DHigh       byte
+	ZigRight    byte
+	ZizLeft     byte
+	ZigLongLeft byte
 }
 
 type Game struct {
