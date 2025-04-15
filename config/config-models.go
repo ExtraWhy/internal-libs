@@ -3,6 +3,7 @@ package config
 type RequestService struct {
 	DatabaseUrl     string `yaml:"database_url"`
 	DatabaseType    string `yaml:"database_type"`
+	ApiType         string `yaml:"api_type"`
 	RestServiceHost string `yaml:"rest_service_host"`
 	RestServicePort string `yaml:"rest_service_port"`
 	GameServicePort string `yaml:"game_serv_port"`
