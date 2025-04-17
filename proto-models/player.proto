@@ -32,4 +32,5 @@ message PlayerResponse {
     optional uint64 gameid = 3;
     optional uint64 money_won = 4; 
     optional bytes lines = 5;
+    optional bytes reels = 6;
 }
