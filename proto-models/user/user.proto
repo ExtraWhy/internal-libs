@@ -1,0 +1,31 @@
+syntax = "proto2";
+
+package userproto;
+
+
+message User {
+    optional uint64 id = 1;  // Unique ID number for this person.
+   optional string name = 2;
+   optional string email = 3;
+}
+
+
+service ServiceGameWon {
+  
+  rpc GetRegisteredUser (UserRequest) returns (UserResponse) {}
+}
+
+
+message UserRequest {
+    optional  uint64 id = 1; 
+    optional  string name = 2;
+    optional string email = 3 ;
+    optional bytes sessiontok = 4;
+}
+
+message UserResponse {
+    optional uint64 id = 1;
+    optional string name = 2;
+    optional string email = 3;
+    optional bytes sessiontok = 4;
+}
