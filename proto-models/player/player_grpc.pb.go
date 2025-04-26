@@ -19,6 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ServiceGameWonClient interface {
 	GetWinForPlayer(ctx context.Context, in *PlayerRequest, opts ...grpc.CallOption) (*PlayerResponse, error)
+	GetWinForCleopatra(ctx context.Context, in *PlayerRequest, opts ...grpc.CallOption) (*CleopatraWins, error)
 }
 
 type serviceGameWonClient struct {
@@ -38,11 +39,21 @@ func (c *serviceGameWonClient) GetWinForPlayer(ctx context.Context, in *PlayerRe
 	return out, nil
 }
 
+func (c *serviceGameWonClient) GetWinForCleopatra(ctx context.Context, in *PlayerRequest, opts ...grpc.CallOption) (*CleopatraWins, error) {
+	out := new(CleopatraWins)
+	err := c.cc.Invoke(ctx, "/playerproto.ServiceGameWon/GetWinForCleopatra", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ServiceGameWonServer is the server API for ServiceGameWon service.
 // All implementations must embed UnimplementedServiceGameWonServer
 // for forward compatibility
 type ServiceGameWonServer interface {
 	GetWinForPlayer(context.Context, *PlayerRequest) (*PlayerResponse, error)
+	GetWinForCleopatra(context.Context, *PlayerRequest) (*CleopatraWins, error)
 	mustEmbedUnimplementedServiceGameWonServer()
 }
 
@@ -52,6 +63,9 @@ type UnimplementedServiceGameWonServer struct {
 
 func (UnimplementedServiceGameWonServer) GetWinForPlayer(context.Context, *PlayerRequest) (*PlayerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetWinForPlayer not implemented")
+}
+func (UnimplementedServiceGameWonServer) GetWinForCleopatra(context.Context, *PlayerRequest) (*CleopatraWins, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetWinForCleopatra not implemented")
 }
 func (UnimplementedServiceGameWonServer) mustEmbedUnimplementedServiceGameWonServer() {}
 
@@ -84,6 +98,24 @@ func _ServiceGameWon_GetWinForPlayer_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ServiceGameWon_GetWinForCleopatra_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PlayerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceGameWonServer).GetWinForCleopatra(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/playerproto.ServiceGameWon/GetWinForCleopatra",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceGameWonServer).GetWinForCleopatra(ctx, req.(*PlayerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ServiceGameWon_ServiceDesc is the grpc.ServiceDesc for ServiceGameWon service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -94,6 +126,10 @@ var ServiceGameWon_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetWinForPlayer",
 			Handler:    _ServiceGameWon_GetWinForPlayer_Handler,
+		},
+		{
+			MethodName: "GetWinForCleopatra",
+			Handler:    _ServiceGameWon_GetWinForCleopatra_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
