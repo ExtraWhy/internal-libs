@@ -14,6 +14,8 @@ message Player {
 service ServiceGameWon {
   
   rpc GetWinForPlayer (PlayerRequest) returns (PlayerResponse) {}
+
+  rpc GetWinForCleopatra(PlayerRequest) return (CleopatraWins) {}
 }
 
 //player requests 
@@ -33,4 +35,23 @@ message PlayerResponse {
     optional uint64 money_won = 4; 
     optional bytes lines = 5;
     optional bytes reels = 6;
+}
+
+message CleopatraWins {
+  repeated CleopatraWin wins = 1;
+}
+
+
+message CleopatraWin {
+  optional float64 Pay   = 1;
+  optional float64 Mult   = 2;
+  optional uint32 Sym  = 3;     
+  optional repeated uint32 Num = 4;       
+  optional int Line = 5;  
+  optional repeated uint32  Linex = 6;                                          
+  optional uint32 Free = 7;
+  optional int BID = 8; 
+  optional  google.protobuf.Any Bon  = 9; 
+  optional uint32 JID  = 10; 
+  optional float64 Jack = 11;
 }

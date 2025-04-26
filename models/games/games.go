@@ -1,5 +1,9 @@
 package games
 
+//game structure
+// game dat file
+// this file has data only to be read from
+
 type Game struct {
 	Reels   [][]uint8
 	Lines   [][]uint8
