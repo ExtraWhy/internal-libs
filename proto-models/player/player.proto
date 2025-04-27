@@ -37,13 +37,11 @@ message PlayerResponse {
     optional bytes reels = 6;
 }
 
-message Symbols {
-  repeated int32 Sym = 1; 
-}
+
 
 message CleopatraWins {
   repeated CleopatraWin wins = 1;
-  repeated Symbols Syms = 2;
+  repeated int32 Syms = 2;
 }
 
 message CleopatraWin {
