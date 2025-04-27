@@ -37,10 +37,12 @@ message PlayerResponse {
     optional bytes reels = 6;
 }
 
+
+
 message CleopatraWins {
   repeated CleopatraWin wins = 1;
+  repeated int32 Syms = 2;
 }
-
 
 message CleopatraWin {
   optional float Pay   = 1;
