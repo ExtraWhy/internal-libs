@@ -41,6 +41,10 @@ message CleopatraWins {
   repeated CleopatraWin wins = 1;
 }
 
+message Symbols {
+  repeated int32 Sym = 1; 
+}
+
 
 message CleopatraWin {
   optional float Pay   = 1;
@@ -54,4 +58,5 @@ message CleopatraWin {
   optional  google.protobuf.Any Bon  = 9; 
   optional uint32 JID  = 10; 
   optional float Jack = 11;
+  repeated Symbols Syms = 12;
 }
