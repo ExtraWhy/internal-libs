@@ -6,6 +6,9 @@ type RequestService struct {
 	ApiType         string `yaml:"api_type"`
 	RestServiceHost string `yaml:"rest_service_host"`
 	RestServicePort string `yaml:"rest_service_port"`
+	WsServiceHost   string `yaml:"ws_service_host"`
+	WsServicePort   string `yaml:"ws_service_port"`
+
 	GameServicePort string `yaml:"game_serv_port"`
 }
 
