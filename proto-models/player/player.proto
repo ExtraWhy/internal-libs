@@ -26,6 +26,7 @@ message PlayerRequest {
     optional  string name = 1;
     optional  uint64 id = 2; 
     optional  uint64 gameid = 3;
+    optional uint64  bet = 4; 
 }
 
 message PlayerResponse {
@@ -48,7 +49,7 @@ message CleopatraWin {
   optional float Pay   = 1;
   optional float Mult   = 2;
   optional uint32 Sym  = 3;     
-  repeated uint32 Num = 4;       
+  optional uint32 Num = 4;       
   optional uint32 Line = 5;  
   repeated uint32  Linex = 6;                                          
   optional uint32 Free = 7;
