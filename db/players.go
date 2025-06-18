@@ -112,3 +112,8 @@ func (db *NoSqlConnection) UpdatePlayerMoney(p *player.Player) (int64, error) {
 	}
 	return res.ModifiedCount, nil
 }
+
+// todo
+func (db *NoSqlConnection) CasinoBetUpdatePlayer(p *player.Player) error {
+	return nil
+}

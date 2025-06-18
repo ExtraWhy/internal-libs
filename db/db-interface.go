@@ -13,6 +13,7 @@ type DbIface interface {
 	DisplayPlayers() []player.Player
 	AddPlayer(p *player.Player) bool
 	CreatePlayersTable() error
+	CasinoBetUpdatePlayer(*player.Player) error //only for casino bet client
 }
 
 type UnimplementedDbConnector struct {
@@ -30,6 +31,10 @@ func (UnimplementedDbConnector) AddPlayer(p *player.Player) bool {
 
 func (UnimplementedDbConnector) UpdatePlayerMoney(p *player.Player) (int64, error) {
 	return -1, fmt.Errorf("Must implement method Init")
+}
+
+func (UnimplementedDbConnector) CasinoBetUpdatePlayer(*player.Player) error {
+	return fmt.Errorf("Must implement method CasinoBetUpdatePlayer")
 }
 
 func (UnimplementedDbConnector) DisplayPlayers() []player.Player {
