@@ -76,6 +76,10 @@ func (db *DBSqlConnection) UpdatePlayerMoney(p *player.Player) (int64, error) {
 	}
 }
 
+func (db *DBSqlConnection) CasinoBetUpdatePlayer(p *player.Player) (int64, error) {
+	return -1, errors.New("Not implemented error")
+}
+
 func (db *NoSqlConnection) AddPlayer(p *player.Player) bool {
 
 	coll := db.db.Collection("players")
