@@ -13,7 +13,7 @@ type DbIface interface {
 	DisplayPlayers() []player.Player
 	AddPlayer(p *player.Player) bool
 	CreatePlayersTable() error
-	CasinoBetUpdatePlayer(*player.Player) error //only for casino bet client
+	CasinoBetUpdatePlayer(*player.Player) (int64, error) //only for casino bet client
 }
 
 type UnimplementedDbConnector struct {
