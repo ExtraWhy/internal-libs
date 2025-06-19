@@ -17,7 +17,7 @@ func MakeLmsTest() (*LMS, error) {
 	return &l, nil
 }
 
-func PrinMe(l *LMS) {
+func PrintMe(l *LMS) {
 	for i := 0; i < len(l.players); i++ {
 		fmt.Printf("Player id [%d] -> stats [%d][%d] \r\n", l.players[i].Id, l.players[i].DailyLimit, l.players[i].PointsForReward)
 	}
@@ -25,14 +25,18 @@ func PrinMe(l *LMS) {
 
 func TestLMS(t *testing.T) {
 	lms, _ := MakeLmsTest()
-	PrinMe(lms)
-	lms.UpdateDailyReward(2, 10)
+	PrintMe(lms)
+	lms.UpdateDailyReward(2, 1)
 	lms.UpdatePlayerLimitById(6, 10)
+	lms.UpdatePlayerLimitById(8, 100)
+	lms.UpdatePlayerLimitById(10, 1000)
+
 	dbiface := &db.NoSqlConnection{}
 	//test account used here
 	dbiface.Init("Cluster0", "cryptowincryptowin:EfK0weUUe7t99Djx")
+	defer dbiface.Deinit()
 	for i := 1; i < 10; i++ {
 		dbiface.CasinoBetUpdatePlayer(&lms.players[i-1])
 	}
-	PrinMe(lms)
+	PrintMe(lms)
 }
