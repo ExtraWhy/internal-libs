@@ -114,6 +114,12 @@ func (db *NoSqlConnection) UpdatePlayerMoney(p *player.Player) (int64, error) {
 }
 
 // todo
-func (db *NoSqlConnection) CasinoBetUpdatePlayer(p *player.Player) error {
-	return nil
+func (db *NoSqlConnection) CasinoBetUpdatePlayer(p *player.Player) (int64, error) {
+	updt := bson.M{"$set": bson.M{"daily_limit": p.DailyLimit, "total_won_daily": p.TotalWonDaily, "points_for_reward": p.PointsForReward}}
+	res, err := db.db.Collection("players").UpdateOne(context.TODO(), bson.M{"id": p.Id}, updt)
+	if err != nil {
+		return -1, errors.New("failed to update player for casinobet")
+	}
+
+	return res.ModifiedCount, nil
 }

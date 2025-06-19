@@ -33,8 +33,9 @@ func (UnimplementedDbConnector) UpdatePlayerMoney(p *player.Player) (int64, erro
 	return -1, fmt.Errorf("Must implement method Init")
 }
 
-func (UnimplementedDbConnector) CasinoBetUpdatePlayer(*player.Player) error {
-	return fmt.Errorf("Must implement method CasinoBetUpdatePlayer")
+// used only for casinobet client
+func (UnimplementedDbConnector) CasinoBetUpdatePlayer(*player.Player) (int64, error) {
+	return -1, fmt.Errorf("Must implement method CasinoBetUpdatePlayer")
 }
 
 func (UnimplementedDbConnector) DisplayPlayers() []player.Player {

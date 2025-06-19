@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/ExtraWhy/internal-libs/db"
 	"github.com/ExtraWhy/internal-libs/models/player"
 )
 
@@ -11,7 +12,7 @@ func MakeLmsTest() (*LMS, error) {
 	l := LMS{}
 	for i := 0; i < 10; i++ {
 		var v uint64 = (uint64)(i)
-		l.players = append(l.players, player.Player{Id: v})
+		l.players = append(l.players, player.Player{Id: v + 1})
 	}
 	return &l, nil
 }
@@ -27,5 +28,11 @@ func TestLMS(t *testing.T) {
 	PrinMe(lms)
 	lms.UpdateDailyReward(2, 10)
 	lms.UpdatePlayerLimitById(6, 10)
+	dbiface := &db.NoSqlConnection{}
+	//test account used here
+	dbiface.Init("Cluster0", "cryptowincryptowin:EfK0weUUe7t99Djx")
+	for i := 1; i < 10; i++ {
+		dbiface.CasinoBetUpdatePlayer(&lms.players[i-1])
+	}
 	PrinMe(lms)
 }
