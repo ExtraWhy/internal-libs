@@ -7,14 +7,14 @@ import "github.com/ExtraWhy/internal-libs/models/player"
 // otherwise we can hold in mongo atlas test account those for testing purposes
 // see player updated struct
 type LMS struct {
-	players []player.Player
+	players []player.Player[uint64]
 }
 
 // TODO: make function see test
 /*
  */
 
-func (l *LMS) find_by_id(id uint64) *player.Player {
+func (l *LMS) find_by_id(id uint64) *player.Player[uint64] {
 	for i := 0; i < len(l.players); i++ {
 		if l.players[i].Id == id {
 			return &l.players[i]

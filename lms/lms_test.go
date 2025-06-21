@@ -12,7 +12,7 @@ func MakeLmsTest() (*LMS, error) {
 	l := LMS{}
 	for i := 0; i < 10; i++ {
 		var v uint64 = (uint64)(i)
-		l.players = append(l.players, player.Player{Id: v + 1})
+		l.players = append(l.players, player.Player[uint64]{Id: v + 1})
 	}
 	return &l, nil
 }

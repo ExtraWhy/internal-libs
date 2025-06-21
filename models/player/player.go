@@ -1,8 +1,14 @@
 package player
 
+import "github.com/google/uuid"
+
+type SpecializedID interface {
+	uint64 | uuid.UUID
+}
+
 // player structure for playing a game
-type Player struct {
-	Id    uint64 `json:"id"`
+type Player[T SpecializedID] struct {
+	Id    T      `json:"id"`
 	Money uint64 `json:"money"`
 	//related for main/casinobet/dev
 	DailyLimit      uint64 `json:"daily_limit"`

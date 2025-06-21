@@ -25,15 +25,15 @@ func (db *DBSqlConnection) CreatePlayersTable() error {
 	return nil
 }
 
-func (db *DBSqlConnection) DisplayPlayers() []player.Player {
+func (db *DBSqlConnection) DisplayPlayers() []player.Player[uint64] {
 	row, err := db.db.Query("SELECT * FROM players")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer row.Close()
-	var list []player.Player
+	var list []player.Player[uint64]
 	for row.Next() { // Iterate and fetch the records from result cursor
-		var p player.Player
+		var p player.Player[uint64]
 		row.Scan(&p.Id, &p.Money, &p.Name)
 		list = append(list, p)
 	}
@@ -45,7 +45,7 @@ func (db *NoSqlConnection) CreatePlayersTable() error {
 	return nil
 }
 
-func (db *DBSqlConnection) AddPlayer(p *player.Player) bool {
+func (db *DBSqlConnection) AddPlayer(p *player.Player[uint64]) bool {
 	if p == nil {
 		return false
 	}
@@ -63,7 +63,7 @@ func (db *DBSqlConnection) AddPlayer(p *player.Player) bool {
 	return true
 }
 
-func (db *DBSqlConnection) UpdatePlayerMoney(p *player.Player) (int64, error) {
+func (db *DBSqlConnection) UpdatePlayerMoney(p *player.Player[uint64]) (int64, error) {
 
 	if p == nil {
 		return -1, errors.New("nil reference to player")
@@ -76,11 +76,11 @@ func (db *DBSqlConnection) UpdatePlayerMoney(p *player.Player) (int64, error) {
 	}
 }
 
-func (db *DBSqlConnection) CasinoBetUpdatePlayer(p *player.Player) (int64, error) {
+func (db *DBSqlConnection) CasinoBetUpdatePlayer(p *player.Player[uint64]) (int64, error) {
 	return -1, errors.New("Not implemented error")
 }
 
-func (db *NoSqlConnection) AddPlayer(p *player.Player) bool {
+func (db *NoSqlConnection) AddPlayer(p *player.Player[uint64]) bool {
 
 	coll := db.db.Collection("players")
 
@@ -91,15 +91,15 @@ func (db *NoSqlConnection) AddPlayer(p *player.Player) bool {
 	return result.Acknowledged
 }
 
-func (db *NoSqlConnection) DisplayPlayers() []player.Player {
+func (db *NoSqlConnection) DisplayPlayers() []player.Player[uint64] {
 	col := db.db.Collection("players")
 	cursor, err := col.Find(context.TODO(), bson.M{})
 	if err != nil {
 		return nil
 	}
-	var players []player.Player
+	var players []player.Player[uint64]
 	for cursor.Next(context.TODO()) {
-		var elem player.Player
+		var elem player.Player[uint64]
 		err := cursor.Decode(&elem)
 		if err == nil {
 			players = append(players, elem)
@@ -108,7 +108,7 @@ func (db *NoSqlConnection) DisplayPlayers() []player.Player {
 	return players
 }
 
-func (db *NoSqlConnection) UpdatePlayerMoney(p *player.Player) (int64, error) {
+func (db *NoSqlConnection) UpdatePlayerMoney(p *player.Player[uint64]) (int64, error) {
 	updt := bson.M{"$set": bson.M{"money": p.Money}}
 	res, err := db.db.Collection("players").UpdateOne(context.TODO(), bson.M{"id": p.Id}, updt)
 	if err != nil {
@@ -118,7 +118,7 @@ func (db *NoSqlConnection) UpdatePlayerMoney(p *player.Player) (int64, error) {
 }
 
 // todo
-func (db *NoSqlConnection) CasinoBetUpdatePlayer(p *player.Player) (int64, error) {
+func (db *NoSqlConnection) CasinoBetUpdatePlayer(p *player.Player[uint64]) (int64, error) {
 	updt := bson.M{"$set": bson.M{"daily_limit": p.DailyLimit, "total_won_daily": p.TotalWonDaily, "points_for_reward": p.PointsForReward}}
 	res, err := db.db.Collection("players").UpdateOne(context.TODO(), bson.M{"id": p.Id}, updt)
 	if err != nil {

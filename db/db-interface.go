@@ -9,11 +9,11 @@ import (
 type DbIface interface {
 	Init(driver string, dsn string) error
 	Deinit() error
-	UpdatePlayerMoney(p *player.Player) (int64, error)
-	DisplayPlayers() []player.Player
-	AddPlayer(p *player.Player) bool
+	UpdatePlayerMoney(p *player.Player[any]) (int64, error)
+	DisplayPlayers() []player.Player[any]
+	AddPlayer(p *player.Player[any]) bool
 	CreatePlayersTable() error
-	CasinoBetUpdatePlayer(*player.Player) (int64, error) //only for casino bet client
+	CasinoBetUpdatePlayer(*player.Player[any]) (int64, error) //only for casino bet client
 }
 
 type UnimplementedDbConnector struct {
@@ -25,20 +25,20 @@ func (UnimplementedDbConnector) CreatePlayersTable() error {
 	return fmt.Errorf("Must implement method Init")
 }
 
-func (UnimplementedDbConnector) AddPlayer(p *player.Player) bool {
+func (UnimplementedDbConnector) AddPlayer(p *player.Player[any]) bool {
 	return false
 }
 
-func (UnimplementedDbConnector) UpdatePlayerMoney(p *player.Player) (int64, error) {
+func (UnimplementedDbConnector) UpdatePlayerMoney(p *player.Player[any]) (int64, error) {
 	return -1, fmt.Errorf("Must implement method Init")
 }
 
 // used only for casinobet client
-func (UnimplementedDbConnector) CasinoBetUpdatePlayer(*player.Player) (int64, error) {
+func (UnimplementedDbConnector) CasinoBetUpdatePlayer(*player.Player[any]) (int64, error) {
 	return -1, fmt.Errorf("Must implement method CasinoBetUpdatePlayer")
 }
 
-func (UnimplementedDbConnector) DisplayPlayers() []player.Player {
+func (UnimplementedDbConnector) DisplayPlayers() []player.Player[any] {
 	return nil
 }
 
