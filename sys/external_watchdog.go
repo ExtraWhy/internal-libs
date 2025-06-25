@@ -31,6 +31,7 @@ func (ew *ExternalWatchdog) Stop() {
 	ew.tick.Stop()
 }
 
-func (ew *ExternalWatchdog) Restart() {
-
+// used for debouncing if needed
+func (ew *ExternalWatchdog) Restart(interval int) {
+	ew.tick.Reset(time.Duration(interval) * time.Second)
 }
