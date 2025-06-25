@@ -25,7 +25,6 @@ func (ew *ExternalWatchdog) Start(cb func() (any, error)) {
 			}
 		}()
 	}
-	select {} //remove me
 }
 
 func (ew *ExternalWatchdog) Stop() {
