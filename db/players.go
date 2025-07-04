@@ -40,11 +40,6 @@ func (db *DBSqlConnection) DisplayPlayers() []player.Player[uint64] {
 	return list
 }
 
-func (db *NoSqlConnection) CreatePlayersTable() error {
-
-	return nil
-}
-
 func (db *DBSqlConnection) AddPlayer(p *player.Player[uint64]) bool {
 	if p == nil {
 		return false
@@ -80,50 +75,71 @@ func (db *DBSqlConnection) CasinoBetUpdatePlayer(p *player.Player[uint64]) (int6
 	return -1, errors.New("Not implemented error")
 }
 
+func (db *NoSqlConnection) CreatePlayersTable() error {
+
+	return nil
+}
+
 func (db *NoSqlConnection) AddPlayer(p *player.Player[uint64]) bool {
 
-	coll := db.db.Collection("players")
+	if db.lck.TryLock() {
+		defer db.lck.Unlock()
+		coll := db.db.Collection("players")
 
-	result, err := coll.InsertOne(context.TODO(), p)
-	if err != nil {
-		return false
+		result, err := coll.InsertOne(context.TODO(), p)
+		if err != nil {
+			return false
+		}
+		return result.Acknowledged
 	}
-	return result.Acknowledged
+	return false
 }
 
 func (db *NoSqlConnection) DisplayPlayers() []player.Player[uint64] {
-	col := db.db.Collection("players")
-	cursor, err := col.Find(context.TODO(), bson.M{})
-	if err != nil {
-		return nil
-	}
-	var players []player.Player[uint64]
-	for cursor.Next(context.TODO()) {
-		var elem player.Player[uint64]
-		err := cursor.Decode(&elem)
-		if err == nil {
-			players = append(players, elem)
+	if db.lck.TryLock() {
+		defer db.lck.Unlock()
+		col := db.db.Collection("players")
+		cursor, err := col.Find(context.TODO(), bson.M{})
+		if err != nil {
+			return nil
 		}
+		var players []player.Player[uint64]
+		for cursor.Next(context.TODO()) {
+			var elem player.Player[uint64]
+			err := cursor.Decode(&elem)
+			if err == nil {
+				players = append(players, elem)
+			}
+		}
+		return players
 	}
-	return players
+	return []player.Player[uint64]{} //no players
 }
 
 func (db *NoSqlConnection) UpdatePlayerMoney(p *player.Player[uint64]) (int64, error) {
-	updt := bson.M{"$set": bson.M{"money": p.Money}}
-	res, err := db.db.Collection("players").UpdateOne(context.TODO(), bson.M{"id": p.Id}, updt)
-	if err != nil {
-		return -1, errors.New("failed to updated")
+	if db.lck.TryLock() {
+		defer db.lck.Unlock()
+		updt := bson.M{"$set": bson.M{"money": p.Money}}
+		res, err := db.db.Collection("players").UpdateOne(context.TODO(), bson.M{"id": p.Id}, updt)
+		if err != nil {
+			return -1, errors.New("failed to updated")
+		}
+		return res.ModifiedCount, nil
 	}
-	return res.ModifiedCount, nil
+	return -1, errors.New("failed to acquire lock")
 }
 
 // todo
 func (db *NoSqlConnection) CasinoBetUpdatePlayer(p *player.Player[uint64]) (int64, error) {
-	updt := bson.M{"$set": bson.M{"daily_limit": p.DailyLimit, "total_won_daily": p.TotalWonDaily, "points_for_reward": p.PointsForReward}}
-	res, err := db.db.Collection("players").UpdateOne(context.TODO(), bson.M{"id": p.Id}, updt)
-	if err != nil {
-		return -1, errors.New("failed to update player for casinobet")
-	}
+	if db.lck.TryLock() {
+		defer db.lck.Unlock()
+		updt := bson.M{"$set": bson.M{"daily_limit": p.DailyLimit, "total_won_daily": p.TotalWonDaily, "points_for_reward": p.PointsForReward}}
+		res, err := db.db.Collection("players").UpdateOne(context.TODO(), bson.M{"id": p.Id}, updt)
+		if err != nil {
+			return -1, errors.New("failed to update player for casinobet")
+		}
 
-	return res.ModifiedCount, nil
+		return res.ModifiedCount, nil
+	}
+	return -1, errors.New("failed to acquire lock ")
 }
