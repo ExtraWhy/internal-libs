@@ -122,7 +122,7 @@ func (db *NoSqlConnection) UpdatePlayerMoney(p *player.Player[uint64]) (int64, e
 		updt := bson.M{"$set": bson.M{"money": p.Money}}
 		res, err := db.db.Collection("players").UpdateOne(context.TODO(), bson.M{"id": p.Id}, updt)
 		if err != nil {
-			return -1, errors.New("failed to updated")
+			return -1, errors.New("failed to update")
 		}
 		return res.ModifiedCount, nil
 	}
