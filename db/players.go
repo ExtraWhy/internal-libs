@@ -168,7 +168,7 @@ func (db *NoSqlConnection) CreateRecoveryTable(p *player.Player[uint64]) error {
 
 	if db.lck.TryLock() {
 		defer db.lck.Unlock()
-		updt := p.Id
+		updt := bson.M{"player_id": p.Id}
 		_, err := db.db.Collection("recovery").InsertOne(context.TODO(), updt)
 
 		if err != nil {
