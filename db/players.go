@@ -181,7 +181,7 @@ func (db *NoSqlConnection) CreateRecoveryTable(p *player.Player[uint64]) error {
 func (db *NoSqlConnection) AddRecoveryRecord(p *player.Player[uint64], fe_state any) (int64, error) {
 	if db.lck.TryLock() {
 		defer db.lck.Unlock()
-		updt := bson.M{"$set": bson.M{"player_id": p.Id, "game_id": 0xff, "fe_state": fe_state}}
+		updt := bson.M{"$set": bson.M{"game_id": 0xff, "fe_state": fe_state}}
 		_, err := db.db.Collection("recovery").UpdateOne(context.TODO(), bson.M{"player_id": p.Id}, updt)
 		if err != nil {
 			return -1, errors.New("failed to update recovery state")
