@@ -1,0 +1,6 @@
+test:
+	@go test ./...
+
+gogenerate:
+	@go generate ./...
+	

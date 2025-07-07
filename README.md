@@ -10,3 +10,29 @@
 3. run `make.sh`
 4. commit to git generated files form `players.proto`
 5. Backend's `make.sh` shall do the magic for you
+
+# DynConfig
+If you'd like to regenerate the mocks, you'll need to run through the following steps:
+
+1. install gomock/mockgen:
+
+```
+go install go.uber.org/mock/mockgen@v0.5.2
+```
+
+Then put the following line in your `.bashrc` file:
+
+```
+export PATH=$PATH:$(go env GOPATH)/bin
+```
+
+2. Run
+```
+make gogenerate
+```
+
+In order to run the unit tests:
+```
+make test
+```
+
