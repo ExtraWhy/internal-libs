@@ -14,6 +14,9 @@ type DbIface[T player.SpecializedID] interface {
 	AddPlayer(p *player.Player[T]) bool
 	CreatePlayersTable() error
 	CasinoBetUpdatePlayer(*player.Player[T]) (int64, error) //only for casino bet client
+	//recovery
+	CreateRecoveryTable() error
+	CreateRecoveryRecord(*player.Player[T], any) (int64, error)
 }
 
 type UnimplementedDbConnector struct {
@@ -22,6 +25,10 @@ type UnimplementedDbConnector struct {
 func (UnimplementedDbConnector) mustEmbedUnimplementedDbConnector() {}
 
 func (UnimplementedDbConnector) CreatePlayersTable() error {
+	return fmt.Errorf("Must implement method Init")
+}
+
+func (UnimplementedDbConnector) CreateRecoveryTable() error {
 	return fmt.Errorf("Must implement method Init")
 }
 

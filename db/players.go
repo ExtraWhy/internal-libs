@@ -25,6 +25,22 @@ func (db *DBSqlConnection) CreatePlayersTable() error {
 	return nil
 }
 
+func (db *DBSqlConnection) CreateRecoveryTable() error {
+	rectable := `CREATE TABLE recovery (
+		"player_id" integer ,		
+		"game_id" integer,
+		"fe_state" TEXT		
+	  );` // SQL Statement for Create Table
+
+	statement, err := db.db.Prepare(rectable) // Prepare SQL Statement
+	if err != nil {
+		return errors.New("failed to prepare players table")
+	}
+	statement.Exec() // Execute SQL Statements //check for error
+	return nil
+
+}
+
 func (db *DBSqlConnection) DisplayPlayers() []player.Player[uint64] {
 	row, err := db.db.Query("SELECT * FROM players")
 	if err != nil {
@@ -73,6 +89,10 @@ func (db *DBSqlConnection) UpdatePlayerMoney(p *player.Player[uint64]) (int64, e
 
 func (db *DBSqlConnection) CasinoBetUpdatePlayer(p *player.Player[uint64]) (int64, error) {
 	return -1, errors.New("Not implemented error")
+}
+
+func (db *DBSqlConnection) CreateRecoveryRecord(*player.Player[uint64], any) (int64, error) {
+	return 0, nil
 }
 
 func (db *NoSqlConnection) CreatePlayersTable() error {
@@ -142,4 +162,18 @@ func (db *NoSqlConnection) CasinoBetUpdatePlayer(p *player.Player[uint64]) (int6
 		return res.ModifiedCount, nil
 	}
 	return -1, errors.New("failed to acquire lock ")
+}
+
+func (db *NoSqlConnection) CreateRecoveryRecord(p *player.Player[uint64], fe_state any) (int64, error) {
+	if db.lck.TryLock() {
+		defer db.lck.Unlock()
+		updt := bson.M{"$set": bson.M{"player_id": p.Id, "game_id": 0xff, "fe_state": fe_state}}
+		res, err := db.db.Collection("recovery").UpdateOne(context.TODO(), bson.M{"id": p.Id}, updt)
+		if err != nil {
+			return -1, errors.New("failed to update recovery state")
+		}
+
+		return res.ModifiedCount, nil
+	}
+	return 0, errors.New("failed to acquire lock")
 }
