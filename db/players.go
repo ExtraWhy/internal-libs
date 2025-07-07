@@ -91,10 +91,6 @@ func (db *DBSqlConnection) CasinoBetUpdatePlayer(p *player.Player[uint64]) (int6
 	return -1, errors.New("Not implemented error")
 }
 
-func (db *DBSqlConnection) CreateRecoveryRecord(*player.Player[uint64], any) (int64, error) {
-	return 0, nil
-}
-
 func (db *NoSqlConnection) CreatePlayersTable() error {
 
 	return nil
@@ -164,7 +160,12 @@ func (db *NoSqlConnection) CasinoBetUpdatePlayer(p *player.Player[uint64]) (int6
 	return -1, errors.New("failed to acquire lock ")
 }
 
-func (db *NoSqlConnection) CreateRecoveryRecord(p *player.Player[uint64], fe_state any) (int64, error) {
+func (db *NoSqlConnection) CreateRecoveryTable() error {
+
+	return nil
+}
+
+func (db *NoSqlConnection) AddRecoveryRecord(p *player.Player[uint64], fe_state any) (int64, error) {
 	if db.lck.TryLock() {
 		defer db.lck.Unlock()
 		updt := bson.M{"$set": bson.M{"player_id": p.Id, "game_id": 0xff, "fe_state": fe_state}}
