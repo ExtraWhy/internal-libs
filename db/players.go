@@ -25,6 +25,10 @@ func (db *DBSqlConnection) CreatePlayersTable() error {
 	return nil
 }
 
+func (db *DBSqlConnection) AddRecoveryRecord(p *player.Player[uint64], fe_state any) (int64, error) {
+	return -1, errors.New("not implemented exception")
+}
+
 func (db *DBSqlConnection) CreateRecoveryTable() error {
 	rectable := `CREATE TABLE recovery (
 		"player_id" integer ,		
