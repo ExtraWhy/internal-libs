@@ -8,7 +8,6 @@ import (
 	"github.com/ExtraWhy/internal-libs/models/player"
 	_ "github.com/mattn/go-sqlite3" // Import go-sqlite3 library
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func (db *DBSqlConnection) CreatePlayersTable() error {
@@ -165,30 +164,24 @@ func (db *NoSqlConnection) CasinoBetUpdatePlayer(p *player.Player[uint64]) (int6
 	return -1, errors.New("failed to acquire lock ")
 }
 
-func userExists(collection *mongo.Collection, username string) (bool, error) {
-	count, err := collection.CountDocuments(context.TODO(), bson.M{"username": username})
-	if err != nil {
-		return false, err
-	}
-	return count > 0, nil
-}
-
 func (db *NoSqlConnection) CreateRecoveryTable(p *player.Player[uint64]) error {
 
-	updt := bson.M{"$set": bson.M{"player_id": p.Id, "game_id": 0, "fe_state": nil}}
-	count, err := db.db.Collection("recovery").CountDocuments(context.TODO(), bson.M{"player_id": p.Id})
-	if err != nil {
-		return errors.New("failed to query")
-	}
-	if count > 0 {
-		return nil
-	}
-	_, err = db.db.Collection("recovery").InsertOne(context.TODO(), updt)
+	if db.lck.TryLock() {
+		defer db.lck.Unlock()
+		updt := bson.M{"$set": bson.M{"player_id": p.Id}}
+		count, err := db.db.Collection("recovery").CountDocuments(context.TODO(), updt)
+		if err != nil {
+			return errors.New("failed to query")
+		}
+		if count > 0 {
+			return nil
+		}
+		_, err = db.db.Collection("recovery").InsertOne(context.TODO(), updt)
 
-	if err != nil {
-		return errors.New("failed to update recovery state ")
+		if err != nil {
+			return errors.New("failed to update recovery state ")
+		}
 	}
-
 	return errors.New("failed to acquire lock")
 }
 
