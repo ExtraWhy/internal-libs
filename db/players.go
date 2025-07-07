@@ -169,18 +169,10 @@ func (db *NoSqlConnection) CreateRecoveryTable(p *player.Player[uint64]) error {
 	if db.lck.TryLock() {
 		defer db.lck.Unlock()
 		updt := bson.M{"$set": bson.M{"player_id": p.Id}}
-		count, err := db.db.Collection("recovery").CountDocuments(context.TODO(), updt)
+		_, err := db.db.Collection("recovery").InsertOne(context.TODO(), updt)
+
 		if err != nil {
-
-		}
-		if count > 0 {
-			//nop for now
-		} else {
-			_, err = db.db.Collection("recovery").InsertOne(context.TODO(), updt)
-
-			if err != nil {
-				return errors.New("failed to update recovery state ")
-			}
+			return errors.New("failed to update recovery state ")
 		}
 	}
 	return errors.New("failed to acquire lock")
