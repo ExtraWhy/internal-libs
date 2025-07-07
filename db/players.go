@@ -175,22 +175,20 @@ func userExists(collection *mongo.Collection, username string) (bool, error) {
 
 func (db *NoSqlConnection) CreateRecoveryTable(p *player.Player[uint64]) error {
 
-	if db.lck.TryLock() {
-		defer db.lck.Unlock()
-		updt := bson.M{"$set": bson.M{"player_id": p.Id, "game_id": 0, "fe_state": nil}}
-		count, err := db.db.Collection("recovery").CountDocuments(context.TODO(), bson.M{"player_id": p.Id})
-		if err != nil {
-			return errors.New("failed to query")
-		}
-		if count > 0 {
-			return nil
-		}
-		_, err = db.db.Collection("recovery").InsertOne(context.TODO(), updt)
-
-		if err != nil {
-			return errors.New("failed to update recovery state ")
-		}
+	updt := bson.M{"$set": bson.M{"player_id": p.Id, "game_id": 0, "fe_state": nil}}
+	count, err := db.db.Collection("recovery").CountDocuments(context.TODO(), bson.M{"player_id": p.Id})
+	if err != nil {
+		return errors.New("failed to query")
 	}
+	if count > 0 {
+		return nil
+	}
+	_, err = db.db.Collection("recovery").InsertOne(context.TODO(), updt)
+
+	if err != nil {
+		return errors.New("failed to update recovery state ")
+	}
+
 	return errors.New("failed to acquire lock")
 }
 
