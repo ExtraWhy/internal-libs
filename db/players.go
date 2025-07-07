@@ -29,7 +29,7 @@ func (db *DBSqlConnection) AddRecoveryRecord(p *player.Player[uint64], fe_state 
 	return -1, errors.New("not implemented exception")
 }
 
-func (db *DBSqlConnection) CreateRecoveryTable() error {
+func (db *DBSqlConnection) CreateRecoveryTable(p *player.Player[uint64]) error {
 	rectable := `CREATE TABLE recovery (
 		"player_id" integer ,		
 		"game_id" integer,
@@ -164,16 +164,24 @@ func (db *NoSqlConnection) CasinoBetUpdatePlayer(p *player.Player[uint64]) (int6
 	return -1, errors.New("failed to acquire lock ")
 }
 
-func (db *NoSqlConnection) CreateRecoveryTable() error {
+func (db *NoSqlConnection) CreateRecoveryTable(p *player.Player[uint64]) error {
 
-	return nil
+	if db.lck.TryLock() {
+		defer db.lck.Unlock()
+		updt := bson.M{"$set": bson.M{"player_id": p.Id, "game_id": 0, "fe_state": nil}}
+		_, err := db.db.Collection("recovery").InsertOne(context.TODO(), updt)
+		if err != nil {
+			return errors.New("failed to update recovery state")
+		}
+	}
+	return errors.New("failed to acquire lock")
 }
 
 func (db *NoSqlConnection) AddRecoveryRecord(p *player.Player[uint64], fe_state any) (int64, error) {
 	if db.lck.TryLock() {
 		defer db.lck.Unlock()
 		updt := bson.M{"$set": bson.M{"player_id": p.Id, "game_id": 0xff, "fe_state": fe_state}}
-		_, err := db.db.Collection("recovery").InsertOne(context.TODO(), updt)
+		_, err := db.db.Collection("recovery").UpdateOne(context.TODO(), bson.M{"player_id": p.Id}, updt)
 		if err != nil {
 			return -1, errors.New("failed to update recovery state")
 		}

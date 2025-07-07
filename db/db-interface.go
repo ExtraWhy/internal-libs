@@ -15,8 +15,8 @@ type DbIface[T player.SpecializedID] interface {
 	CreatePlayersTable() error
 	CasinoBetUpdatePlayer(*player.Player[T]) (int64, error) //only for casino bet client
 
-	CreateRecoveryTable() error
-	AddRecoveryRecord(*player.Player[uint64], any) (int64, error)
+	CreateRecoveryTable(p *player.Player[T]) error
+	AddRecoveryRecord(*player.Player[T], any) (int64, error)
 }
 
 type UnimplementedDbConnector struct {
