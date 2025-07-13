@@ -15,5 +15,5 @@ type Player[T SpecializedID] struct {
 	TotalWonDaily   uint64 `json:"total_won_daily"`
 	PointsForReward uint64 `json:"points_for_reward"`
 	Name            string `json:"name"`
-	BarFill         string `json:"bar_fill"`
+	BarFill         []int  `json:"bar_fill"`
 }
