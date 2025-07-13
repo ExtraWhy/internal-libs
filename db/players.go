@@ -153,7 +153,7 @@ func (db *NoSqlConnection) UpdatePlayerMoney(p *player.Player[uint64]) (int64, e
 func (db *NoSqlConnection) CasinoBetUpdatePlayer(p *player.Player[uint64]) (int64, error) {
 	if db.lck.TryLock() {
 		defer db.lck.Unlock()
-		updt := bson.M{"$set": bson.M{"daily_limit": p.DailyLimit, "total_won_daily": p.TotalWonDaily, "points_for_reward": p.PointsForReward}}
+		updt := bson.M{"$set": bson.M{"daily_limit": p.DailyLimit, "total_won_daily": p.TotalWonDaily, "points_for_reward": p.PointsForReward, "bar_fill": p.BarFill}}
 		res, err := db.db.Collection("players").UpdateOne(context.TODO(), bson.M{"id": p.Id}, updt)
 		if err != nil {
 			return -1, errors.New("failed to update player for casinobet")

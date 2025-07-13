@@ -14,7 +14,6 @@ type DbIface[T player.SpecializedID] interface {
 	AddPlayer(p *player.Player[T]) bool
 	CreatePlayersTable() error
 	CasinoBetUpdatePlayer(*player.Player[T]) (int64, error) //only for casino bet client
-
 	CreateRecoveryTable(p *player.Player[T]) error
 	AddRecoveryRecord(*player.Player[T], any) (int64, error)
 }
