@@ -54,7 +54,7 @@ func (db *DBSqlConnection) DisplayPlayers() []player.Player[uint64] {
 	var list []player.Player[uint64]
 	for row.Next() { // Iterate and fetch the records from result cursor
 		var p player.Player[uint64]
-		row.Scan(&p.Id, &p.Money, &p.Name)
+		row.Scan(&p.Id, &p.Money, &p.CB.Name)
 		list = append(list, p)
 	}
 	return list
@@ -70,7 +70,7 @@ func (db *DBSqlConnection) AddPlayer(p *player.Player[uint64]) bool {
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
-	_, err = statement.Exec(p.Id, p.Money, p.Name)
+	_, err = statement.Exec(p.Id, p.Money, p.CB.Name)
 	if err != nil {
 		log.Fatalln(err.Error())
 		return false
@@ -153,7 +153,7 @@ func (db *NoSqlConnection) UpdatePlayerMoney(p *player.Player[uint64]) (int64, e
 func (db *NoSqlConnection) CasinoBetUpdatePlayer(p *player.Player[uint64]) (int64, error) {
 	if db.lck.TryLock() {
 		defer db.lck.Unlock()
-		updt := bson.M{"$set": bson.M{"daily_limit": p.DailyLimit, "total_won_daily": p.TotalWonDaily, "points_for_reward": p.PointsForReward, "bar_fill": p.BarFill}}
+		updt := bson.M{"$set": bson.M{"cb_reserved": p.CB}}
 		res, err := db.db.Collection("players").UpdateOne(context.TODO(), bson.M{"id": p.Id}, updt)
 		if err != nil {
 			return -1, errors.New("failed to update player for casinobet")

@@ -25,7 +25,7 @@ func (l *LMS) find_by_id(id uint64) *player.Player[uint64] {
 
 func (l *LMS) UpdatePlayerLimitById(id, lim uint64) bool {
 	if p := l.find_by_id(id); p != nil {
-		p.DailyLimit = lim
+		p.CB.DailyLimit = lim
 		return true
 	}
 	return false
@@ -33,7 +33,7 @@ func (l *LMS) UpdatePlayerLimitById(id, lim uint64) bool {
 
 func (l *LMS) UpdateDailyReward(id, rew uint64) bool {
 	if p := l.find_by_id(id); p != nil {
-		p.PointsForReward = rew
+		p.CB.PointsForReward = rew
 		return true
 	}
 	return false

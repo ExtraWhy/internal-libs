@@ -19,7 +19,7 @@ func MakeLmsTest() (*LMS, error) {
 
 func PrintMe(l *LMS) {
 	for i := 0; i < len(l.players); i++ {
-		fmt.Printf("Player id [%d] -> stats [%d][%d] \r\n", l.players[i].Id, l.players[i].DailyLimit, l.players[i].PointsForReward)
+		fmt.Printf("Player id [%d] -> stats [%d][%d] \r\n", l.players[i].Id, l.players[i].CB.DailyLimit, l.players[i].CB.PointsForReward)
 	}
 }
 
