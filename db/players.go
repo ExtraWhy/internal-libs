@@ -2,7 +2,9 @@ package db
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/ExtraWhy/internal-libs/models/player"
@@ -26,7 +28,26 @@ func (db *DBSqlConnection) CreatePlayersTable() error {
 }
 
 func (db *DBSqlConnection) AddRecoveryRecord(p *player.Player[uint64], fe_state any) (int64, error) {
-	return -1, errors.New("not implemented exception")
+	feStateJSON, err := json.Marshal(fe_state)
+	if err != nil {
+		return -1, fmt.Errorf("failed to marshal fe_state: %w", err)
+	}
+	stmt, err := db.db.Prepare(`UPDATE recovery SET game_id = ?, fe_state = ? WHERE player_id = ?`)
+	if err != nil {
+		return -1, fmt.Errorf("failed to prepare update: %w", err)
+	}
+
+	res, err := stmt.Exec(0xff, string(feStateJSON), p.Id)
+	if err != nil {
+		return -1, fmt.Errorf("failed to update recovery state: %w", err)
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return -1, fmt.Errorf("failed to retrieve affected rows: %w", err)
+	}
+
+	return rowsAffected, nil
 }
 
 func (db *DBSqlConnection) CreateRecoveryTable(p *player.Player[uint64]) error {
@@ -92,7 +113,21 @@ func (db *DBSqlConnection) UpdatePlayerMoney(p *player.Player[uint64]) (int64, e
 }
 
 func (db *DBSqlConnection) CasinoBetUpdatePlayer(p *player.Player[uint64]) (int64, error) {
-	return -1, errors.New("Not implemented error")
+	cbJSON, err := json.Marshal(p.CB)
+	if err != nil {
+		return -1, fmt.Errorf("failed to marshal CB: %w", err)
+	}
+	stmt, err := db.db.Prepare(`UPDATE players SET cb_reserved = ? WHERE id = ?`)
+	if err != nil {
+		return -1, fmt.Errorf("failed to prepare SQL: %w", err)
+	}
+	defer stmt.Close()
+
+	res, err := stmt.Exec(string(cbJSON), p.Id)
+	if err != nil {
+		return -1, fmt.Errorf("failed to update player CB: %w", err)
+	}
+	return res.RowsAffected()
 }
 
 func (db *NoSqlConnection) CreatePlayersTable() error {
