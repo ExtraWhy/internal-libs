@@ -6,7 +6,9 @@ type SpecializedID interface {
 	uint64 | uuid.UUID
 }
 
-type CB_Barfill [6]int
+type CB_Barfill struct {
+	GameBars [6]int `json:"bars"`
+}
 
 // player structure for playing a game
 type Player[T SpecializedID] struct {
