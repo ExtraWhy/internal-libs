@@ -16,7 +16,7 @@ func (db *DBSqlConnection) CreatePlayersTable() error {
 	playerstable := `CREATE TABLE players (
 		"id" integer ,		
 		"money" integer,
-		"name" TEXT		
+		"cb_reserved" TEXT		
 	  );` // SQL Statement for Create Table
 
 	statement, err := db.db.Prepare(playerstable) // Prepare SQL Statement
@@ -75,7 +75,9 @@ func (db *DBSqlConnection) DisplayPlayers() []player.Player[uint64] {
 	var list []player.Player[uint64]
 	for row.Next() { // Iterate and fetch the records from result cursor
 		var p player.Player[uint64]
-		row.Scan(&p.Id, &p.Money, &p.CB.Name)
+		var cb string
+		row.Scan(&p.Id, &p.Money, &cb)
+		json.Unmarshal([]byte(cb), &p.CB)
 		list = append(list, p)
 	}
 	return list
@@ -85,13 +87,15 @@ func (db *DBSqlConnection) AddPlayer(p *player.Player[uint64]) bool {
 	if p == nil {
 		return false
 	}
-	pquery := `INSERT INTO players(id, money, name) VALUES (?, ?, ?)`
+
+	b, _ := json.Marshal(p.CB)
+	pquery := `INSERT INTO players(id, money, cb_reserved) VALUES (?, ?, ?)`
 	statement, err := db.db.Prepare(pquery)
 	// This is good to avoid SQL injections
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
-	_, err = statement.Exec(p.Id, p.Money, p.CB.Name)
+	_, err = statement.Exec(p.Id, p.Money, b)
 	if err != nil {
 		log.Fatalln(err.Error())
 		return false
