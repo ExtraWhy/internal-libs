@@ -10,3 +10,6 @@
 3. run `make.sh`
 4. commit to git generated files form `players.proto`
 5. Backend's `make.sh` shall do the magic for you
+
+# casinobet features
+1. see the main discussion or the backend repo for more details
