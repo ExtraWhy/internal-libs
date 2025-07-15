@@ -32,12 +32,12 @@ func (db *DBSqlConnection) AddRecoveryRecord(p *player.Player[uint64], fe_state 
 	if err != nil {
 		return -1, fmt.Errorf("failed to marshal fe_state: %w", err)
 	}
-	stmt, err := db.db.Prepare(`UPDATE recovery SET game_id = ?, fe_state = ? WHERE player_id = ?`)
+	stmt, err := db.db.Prepare(`INSERT INTO recovery(player_id, game_id, fe_state) VALUES(?, ?, ?)`)
 	if err != nil {
 		return -1, fmt.Errorf("failed to prepare update: %w", err)
 	}
 
-	res, err := stmt.Exec(0xff, string(feStateJSON), p.Id)
+	res, err := stmt.Exec(p.Id, 0xff, string(feStateJSON))
 	if err != nil {
 		return -1, fmt.Errorf("failed to update recovery state: %w", err)
 	}

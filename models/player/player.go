@@ -21,8 +21,3 @@ type Player[T SpecializedID] struct {
 	Money uint64      `json:"money" bson:"money"`
 	CB    CB_Reserved `json:"cb_reserved" bson:"cb_reserved"`
 }
-
-func (p *Player[T]) PlayerCBSchema() string {
-	ret := "{\"daily_limit\": 0,\"total_won_daily\":0,\"points_for_reward\":0,\"name\":\"uname\",\"bar_fill\":[0,0,0,0,0,0]}"
-	return ret
-}
