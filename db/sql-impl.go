@@ -15,9 +15,9 @@ type DBSqlConnection struct {
 }
 
 func (dbc *DBSqlConnection) Init(driver string, dsn string) error {
-	if err := prepareDriver(driver, dsn); err != nil {
-		return err
-	}
+	//	if err := prepareDriver(driver, dsn); err != nil {
+	//		return err
+	//	}
 	db, err := sql.Open(driver, dsn)
 	if err != nil {
 		return fmt.Errorf("failed to open database: %w", err)
