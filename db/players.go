@@ -21,7 +21,7 @@ func (db *DBSqlConnection) CreatePlayersTable() error {
 
 	statement, err := db.db.Prepare(playerstable) // Prepare SQL Statement
 	if err != nil {
-		return errors.New("failed to prepare players table")
+		return fmt.Errorf("failed to prepare players table : %w", err)
 	}
 	statement.Exec() // Execute SQL Statements //check for error
 	return nil
@@ -59,7 +59,7 @@ func (db *DBSqlConnection) CreateRecoveryTable(p *player.Player[uint64]) error {
 
 	statement, err := db.db.Prepare(rectable) // Prepare SQL Statement
 	if err != nil {
-		return errors.New("failed to prepare players table")
+		return fmt.Errorf("failed to prepare players table : %w", err)
 	}
 	statement.Exec() // Execute SQL Statements //check for error
 	return nil
